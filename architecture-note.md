@@ -1,87 +1,118 @@
 # Architecture Note
 
+I treated this as a product slice, not a full document platform.
+
+The assignment leaves room for a lot of possible directions, so I made an early decision to focus on one reliable workflow: a user can create a document, edit it in the browser, share it with another user, import text content from a file, attach supporting files, and come back to it later without losing work.
+
 ## What I prioritized
 
-I intentionally focused on the smallest product slice that demonstrates judgment across document creation, editing, file handling, sharing, and persistence:
+The most important thing for me was that the core flow actually work from start to finish.
 
-- a usable in-browser editor with a formatting toolbar
-- persisted documents that survive refresh
-- autosave so the editing flow feels more document-like
-- an obvious owner/shared split in the dashboard
-- a reliable seeded-user sharing flow
-- lightweight file import for both new documents and existing drafts
-- document-level attachments that are visible and access-controlled
+That meant prioritizing:
 
-The goal was a coherent end-to-end experience rather than breadth.
+- document creation and reopening
+- a usable in-browser rich text editor
+- persistence after refresh and restart
+- a simple but real sharing model
+- file handling that fits the document workflow
+- enough validation and tests to make the app feel stable
 
-## Why I chose this architecture
+I spent less time on breadth and more time on making those pieces hang together.
 
-I used a small Node HTTP server plus a vanilla frontend for two reasons:
+## Frontend
 
-1. it keeps the full stack understandable and easy to verify locally
-2. it removes external package risk so the project can be run and tested without dependency resolution issues
+The frontend is a small single-page app built with plain HTML, CSS, and JavaScript. I kept it this way to reduce setup overhead and make the logic easy to follow in a take-home setting.
 
-For persistence, I chose a local JSON store. The assignment explicitly allows a local file-based store if it is well documented. That let me keep the collaboration logic real while staying inside the timebox.
+The UI has two main states:
 
-## Data model
+- dashboard
+- document editor
 
-The app persists four collections:
+The dashboard separates owned documents from shared documents, which makes the sharing model obvious right away.
 
-- `users`
-- `documents`
-- `shares`
-- `attachments`
-
-Each document has one owner. Shared access is represented as a separate record so the dashboard can clearly distinguish between documents that a user owns and documents shared with them.
-
-Attachments are stored separately and linked by `documentId`, which keeps the document model simple while still making it possible to enforce access control on attachment downloads.
-
-## Editing model
-
-The editor uses `contenteditable` with browser formatting commands for:
-
+The editor supports the formatting needed for the assignment:
 - bold
 - italic
 - underline
 - headings
-- paragraph resets
 - bulleted lists
 - numbered lists
+- paragraph reset
 
-This is not the editor architecture I would use for a production collaborative editor, but it is a practical choice for a scoped take-home because it delivers a working rich-text flow quickly.
+I also added autosave because it improves the editor experience a lot for relatively little complexity.
 
-Autosave is implemented in the client with a debounced save call to the existing document update endpoint. I kept the persistence path single-purpose instead of creating a separate autosave endpoint, because the same validation and authorization rules apply in both cases.
+## Backend
 
-## File upload decisions
+The backend is an Express server with a small set of REST endpoints for:
 
-I split file handling into two product-relevant paths:
+- listing users
+- creating and updating documents
+- sharing documents
+- importing files
+- uploading attachments
+- downloading attachments
+- health checks
 
-1. import `.txt` and `.md` into a brand new editable document
-2. append `.txt` and `.md` content into an existing draft
-
-That covers both creation and in-progress editing workflows without introducing `.docx` parsing complexity.
-
-For attachments, I allowed a slightly broader set of small reference-file types and stored them directly in the JSON database for this take-home. That is acceptable for a local demo, but in production I would move large-file handling to object storage and keep only metadata in the app database.
-
-## Sharing model
-
-The sharing logic is intentionally simple:
-
-- the owner can grant access to another seeded user
+The access model is intentionally simple:
+- every document has one owner
+- owners can share with another seeded user
 - shared users can open and edit the document
-- users with access can download associated attachments
 - only the owner can manage sharing
 
-This shows clear access intent without introducing enterprise-style role systems or authentication complexity.
+That was enough to demonstrate document ownership and access control without getting stuck in full auth and role management.
 
-## What I intentionally deprioritized
+## Persistence
 
+I used a file-based store for this version.
+
+That choice was mostly about time and reliability. It let me keep the project easy to run locally while still preserving:
+- documents
+- formatted content
+- sharing relationships
+- attachments
+
+For a take-home project, this felt like the right tradeoff. It is simple, visible, and easy to reason about. The downside is that deployment needs persistent disk or a mounted volume, which is why the deployment notes target Railway rather than a purely serverless host.
+
+## File handling choices
+
+I supported `.txt` and `.md` for document import.
+
+That was deliberate. These are easy to parse cleanly and let me demonstrate the workflow without spending time on messy `.docx` conversion or third-party document parsing.
+
+I handled file upload in two ways:
+- import into a new document
+- import into an existing draft
+
+I also added document attachments because that is a realistic part of a shared writing workflow and fits the prompt well.
+
+## What I left out
+
+I intentionally did not build:
 - real-time collaboration
+- live cursors
 - comments
+- suggestion mode
 - version history
-- granular permission levels
-- advanced import/export
-- full authentication
-- deployment-specific database infrastructure
+- export
+- full login/authentication
+- role-based permission levels beyond basic shared access
 
-Those would all be reasonable next steps, but they were lower priority than a stable end-to-end core workflow.
+All of those are reasonable next steps, but they were not necessary to show the core product and engineering decisions in the time available.
+
+## If I had another few hours
+
+The next things I would add are:
+
+1. a more robust editor implementation
+2. better mobile layout for the editor
+3. stronger attachment handling and previews
+4. cleaner document activity metadata
+5. either proper auth or a slightly clearer seeded-user switcher
+6. a richer test suite around editor save and permission edge cases
+
+## Summary
+
+The main tradeoff in this project was depth over breadth.
+
+I chose a smaller surface area and tried to make the core behavior feel complete:
+create, edit, save, import, attach, share, reopen.

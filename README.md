@@ -1,29 +1,30 @@
 # Ajaia Collab Editor
 
-A lightweight collaborative document editor built for the Ajaia product-engineering assignment. The app now focuses on a fuller core workflow: create a document, apply basic rich-text formatting, autosave changes, import a text or Markdown file into a new or existing draft, attach supporting files to a document, share that document with another seeded user, and reopen everything after refresh.
+This is a lightweight collaborative document editor built for the Ajaia take-home assignment.
 
-## What is included
+I intentionally scoped it to one solid end-to-end workflow instead of trying to recreate all of Google Docs. The app lets a seeded user create documents, format content in the browser, share documents with another seeded user, attach supporting files, and reopen everything after refresh.
 
-- Seeded multi-user flow with three demo users
-- Create, rename, edit, autosave, manually save, and reopen documents
-- Basic rich-text formatting using the browser editing APIs
-- Import `.txt` and `.md` files into new editable documents
-- Import `.txt` and `.md` files into an existing draft by appending the imported content
-- Upload and associate attachments with a document
-- Owner vs shared document separation on the dashboard
-- Simple sharing model with owner-controlled access
-- Local JSON persistence with seeded data
-- Automated API tests for sharing, new-document import, draft import, and attachment access
+## What it supports
+
+- Create a new document
+- Rename a document
+- Edit rich text in the browser
+- Autosave changes
+- Save manually if needed
+- Upload a `.txt` or `.md` file as a new document
+- Import a `.txt` or `.md` file into an existing draft
+- Attach a supporting file to a document
+- Share a document with another seeded user
+- View owned documents separately from shared documents
+- Reopen documents and preserve content after refresh
 
 ## Supported file types
 
-### Import as editable content
-
+### Import into documents
 - `.txt`
 - `.md`
 
-### Attach to a document
-
+### Attachments
 - `.txt`
 - `.md`
 - `.pdf`
@@ -31,113 +32,112 @@ A lightweight collaborative document editor built for the Ajaia product-engineer
 - `.jpg`
 - `.jpeg`
 
-Attachment size limit: 1 MB per file.
-
-## Tech stack
-
-- Node.js HTTP server with no runtime dependencies
-- Vanilla HTML, CSS, and JavaScript frontend
-- File-based JSON persistence in `data/db.json`
-- Built-in `node:test` test runner
+Attachment size limit: 1 MB
 
 ## Seeded users
 
-Use the user picker in the sidebar to switch between accounts:
+Use these accounts to test the sharing flow:
 
 - Alex Johnson — `alex@ajaia.local`
 - Maya Patel — `maya@ajaia.local`
 - Sam Lee — `sam@ajaia.local`
 
-The seeded database starts with one shared document owned by Alex and shared with Maya so the access model is immediately visible.
+There is no full auth flow in this version. I used seeded users to keep the project focused on document behavior, sharing, and persistence.
 
-## Local setup
+## Tech stack
 
-### Prerequisites
+- Node.js
+- Express
+- Vanilla HTML, CSS, and JavaScript
+- Local JSON/file-based persistence
+- Jest + Supertest for API tests
 
-- Node.js 20 or newer
+I kept the stack simple so I could spend time on the actual product flow instead of framework setup.
 
-### Run locally
+## Running locally
+
+Install dependencies:
 
 ```bash
 npm install
+```
+
+Start the app:
+
+```bash
 npm start
 ```
 
-Open `http://localhost:3000`.
+Open:
 
-Note: this project does not require external packages, so `npm install` is effectively a no-op and is only included for consistency.
+```bash
+http://localhost:3000
+```
 
-### Run tests
+## Running tests
 
 ```bash
 npm test
 ```
 
-## Deployment
-
-This project is deployment-ready for Railway. The repo includes `railway.json`, a `Dockerfile`, and server-side support for storing the JSON database on a mounted Railway volume automatically via `RAILWAY_VOLUME_MOUNT_PATH`. See `DEPLOYMENT.md` for the exact hosting steps and post-deploy smoke test.
-
 ## Project structure
 
-```text
-public/
-  index.html
-  styles.css
-  app.js
-src/
-  server.js
-  store.js
-  markdown.js
-tests/
-  api.test.js
-README.md
-architecture-note.md
-ai-workflow-note.md
-SUBMISSION.md
-walkthrough-video-url.txt
-```
+- `public/` → frontend files
+- `src/server.js` → API and app server
+- `src/store.js` → persistence layer
+- `tests/` → automated tests
+- `sample-files/` → sample files for import testing
 
-## Product notes
+## Main user flow to test
 
-### Core user flow
+1. Select Alex as the active user
+2. Create a document
+3. Add formatted content
+4. Share the document with Maya
+5. Switch to Maya
+6. Open the shared document
+7. Edit it and confirm the changes persist
+8. Import a `.md` or `.txt` file into a new document or existing draft
+9. Add an attachment and download it
 
-1. Pick a seeded user from the sidebar
-2. Create a new document or import a `.txt`/`.md` file as a new document
-3. Format content with the toolbar
-4. Let autosave persist changes or click **Save now**
-5. Append imported `.txt` or `.md` content into an existing draft when needed
-6. Upload a supporting attachment for that document
-7. Share the document with another seeded user email
-8. Switch users and confirm the document appears in **Shared with me**
-9. Reopen and edit the shared document or download the attachment
+## Notes on persistence
 
-### Validation and error handling included
+This app stores data locally on disk. Documents, shares, and attachments remain available after refresh and app restart.
 
-- User identity must be valid for every API request
-- Empty titles fall back to `Untitled document`
-- Unsupported import types are rejected in both UI and API
-- Unsupported attachment types are rejected in both UI and API
-- Attachments larger than 1 MB are rejected
-- Share target must match a seeded user
-- Duplicate shares are blocked
-- Only owners can manage sharing
-- Users without access cannot open, edit, or download attachments for a document
+For local development this works out of the box. For deployment, use a host with persistent storage.
+
+## Deployment
+
+This project is set up for Railway-style deployment with persistent volume support.
+
+Files included for that:
+- `Dockerfile`
+- `railway.json`
+- `DEPLOYMENT.md`
 
 ## Known limitations
 
-- This is not real-time collaboration
-- The editor uses `contenteditable` and `document.execCommand`, which is acceptable for this scoped assignment but not a long-term editor architecture
-- Draft import appends content at the end of the current document instead of inserting at the exact cursor position
-- Attachment storage is file-based and embedded in the local JSON store, which is fine for a small demo but not how I would handle production uploads
-- There is no delete flow, comments, or version history
-- Persistence is file-based rather than database-backed
+This is intentionally scoped and does not include:
+- real-time collaboration
+- comments or suggestion mode
+- version history
+- granular permissions beyond basic shared access
+- full user authentication
+- `.docx` import
 
-## What I would build next with another 2–4 hours
+## Why the scope looks like this
 
-- Replace the editor with TipTap or ProseMirror for stronger document semantics
-- Improve autosave with field-level dirty indicators and conflict messaging
-- Allow import into the current cursor position instead of append-only
-- Add delete and duplicate actions for documents and attachments
-- Move persistence to SQLite or Postgres with blob/object storage for attachments
-- Add user authentication instead of a seeded-user switcher
-- Add richer Markdown import and export
+The goal here was to ship a working collaborative editor slice that feels coherent in a short timebox. I prioritized document creation, editing, import, sharing, persistence, and basic usability over more ambitious features that would have spread the work too thin.
+
+## Demo checklist
+
+Before submitting, I used this as the quick regression path:
+
+1. Create a document
+2. Rename it
+3. Apply formatting
+4. Refresh and confirm persistence
+5. Share with Maya
+6. Open and edit as Maya
+7. Import `.txt` or `.md`
+8. Attach and download a file

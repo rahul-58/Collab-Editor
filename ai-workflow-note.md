@@ -1,43 +1,60 @@
 # AI Workflow Note
 
-## AI tools used
+I used AI tools during the project, but mostly as a speed-up for implementation details, not as a substitute for the actual decisions.
 
-- ChatGPT for scoping, architecture tradeoffs, API shape, UI wording, and implementation drafting
+## Tools I used
 
-## Where AI materially sped up the work
+- ChatGPT
+- Cursor / GitHub Copilot style inline completion
 
-AI was most useful for:
+## Where AI helped
 
-- narrowing the assignment into a realistic product slice
-- drafting the storage and API responsibilities before coding
-- accelerating repetitive implementation work such as validation branches, autosave state handling, and documentation structure
-- reviewing whether the end-to-end demo flow clearly matched the prompt
+AI was most useful for things that are repetitive or easy to get wrong when moving quickly:
+
+- drafting small API handlers
+- generating test scaffolding
+- tightening validation branches
+- cleaning up CSS and UI edge cases
+- suggesting refactors after the basic version was already working
+
+It also helped me move faster on the less interesting parts of the project, like repetitive DOM wiring and some documentation cleanup.
 
 ## What I changed or rejected
 
-I rejected broader AI-suggested stacks that added avoidable complexity for the timebox, including frameworks and editors that would have increased setup, dependency, or deployment risk.
+A lot of AI-generated code was too generic or too heavy for this project.
 
-I also avoided overbuilding permissions, auth, and file parsing. In several places I simplified generated ideas into smaller, more defensible flows:
+The main things I rejected or rewrote were:
 
-- seeded users instead of full auth
-- file-based persistence instead of premature database setup
-- `.txt` and `.md` import only instead of partial `.docx` support
-- append-based import into an existing draft instead of cursor-position import logic
-- simple owner-managed sharing instead of multi-role access control
-- small-file attachment storage in the app store instead of object storage infrastructure
+- overbuilt auth patterns that did not fit the timebox
+- abstractions that made the code harder to follow
+- UI copy that sounded robotic
+- test cases that looked complete on paper but did not match the actual app behavior
+- styling suggestions that worked in light mode but broke dark mode consistency
 
-I also corrected generated/editor-draft behavior when the paragraph control inside lists did not match user expectations, and I tightened the autosave approach so it reused the same permission-checked save path as manual saves.
+In a few cases, AI suggestions pointed me in the right direction but I still rewrote the final version by hand because I wanted the code and UI behavior to stay consistent with the rest of the project.
 
-## How I verified correctness and quality
+## How I verified the work
 
-I verified the implementation by:
+I did not trust generated output by default.
 
-- running automated tests for sharing, import, draft import, and attachment-access flows
-- exercising the main product path manually: create, edit, autosave, refresh, import, attach, share, switch user, reopen, and download
-- checking access control cases such as non-owner sharing attempts and unauthorized attachment downloads
-- confirming unsupported upload validation in the UI and API
-- keeping the architecture small enough that the main flows are easy to inspect end to end
+I verified behavior through:
+- local manual testing of the main user flow
+- sharing tests across the seeded users
+- persistence checks after refresh
+- import and attachment checks
+- automated API tests
+- UI fixes after seeing actual browser behavior
 
-## Reliability note
+The editor and theme work especially needed manual verification because those issues did not always show up clearly from just reading code.
 
-Any AI-generated draft output was treated as a starting point, not the source of truth. Final structure, scope cuts, validation choices, and API behavior were kept intentionally simple so the resulting product is easier to reason about and test.
+## How I think about AI in a project like this
+
+For this assignment, AI was useful when it helped me move faster on execution, but the judgment still had to come from me.
+
+The important parts were still:
+- deciding what to build
+- deciding what not to build
+- noticing when a generated solution was too broad or brittle
+- testing the result in the browser instead of assuming it was correct
+
+That is how I tried to use it here.

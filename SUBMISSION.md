@@ -1,38 +1,74 @@
-# Submission Contents
+# Submission
 
-This folder currently includes:
+This folder contains my submission for the Ajaia collaborative document editor assignment.
 
-- Full source code for the Ajaia Collab Editor
-- `README.md` with local setup and run instructions
+## Included
+
+- source code
+- `README.md`
 - `architecture-note.md`
 - `ai-workflow-note.md`
 - `SUBMISSION.md`
-- `walkthrough-video-url.txt`
 - `DEPLOYMENT.md`
-- `railway.json`
-- `Dockerfile`
+- sample files for import testing
+- automated tests
 
-## Current status
+## Main features included
 
-Working locally:
-
-- document creation
-- document renaming
-- in-browser rich-text editing
+- create a new document
+- rename a document
+- edit rich text in the browser
 - autosave and manual save
-- persistence after refresh
-- `.txt` and `.md` import into new documents
-- `.txt` and `.md` import into an existing draft
-- document attachments with controlled download access
-- owner/shared document distinction
-- owner-managed sharing flow
-- automated API tests
+- reopen saved documents
+- import `.txt` and `.md` files as new documents
+- import `.txt` and `.md` files into an existing draft
+- upload document attachments
+- share a document with another seeded user
+- visible distinction between owned and shared documents
+- persistence after refresh and restart
 
-Deployment-ready but not executed from this environment:
+## Seeded users
 
-- Railway config and Dockerfile are included
-- live deployment URL still needs to be created from a Railway account linked to a Git repo
-- final walkthrough video link
-- screenshots or demo GIF
+- Alex Johnson — `alex@ajaia.local`
+- Maya Patel — `maya@ajaia.local`
+- Sam Lee — `sam@ajaia.local`
 
-Those can be added after local review and deployment.
+## Automated test coverage included
+
+At least one meaningful automated test is included. The suite covers the main sharing and file-handling paths.
+
+Run with:
+
+```bash
+npm test
+```
+
+## Live deployment
+
+Live URL: `ADD_LIVE_URL_HERE`
+
+## Walkthrough video
+
+Video URL: `ADD_VIDEO_URL_HERE`
+
+## What is complete
+
+The core document flow works end to end:
+create, edit, save, share, import, attach, and reopen.
+
+## What is intentionally not included
+
+- real-time collaboration
+- comments or suggestions
+- version history
+- export
+- advanced role-based permissions
+- full auth
+
+## What I would build next with a little more time
+
+If I had another 2 to 4 hours, I would most likely add:
+1. a more polished editor experience
+2. stronger attachment UX
+3. more automated coverage around permission and editor edge cases
+4. a small stretch feature like version history or document export
