@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ajaia Collab Editor</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div>
+          <h1>Collab Editor</h1>
+          <p class="muted">Create, format, share, attach supporting files, and reopen documents with seeded users.</p>
+        </div>
+        <div class="sidebar-card">
+          <label for="userSelect">Active user</label>
+          <select id="userSelect"></select>
+          <p class="hint">Use seeded accounts to demo sharing:</p>
+          <ul id="userList" class="seeded-users"></ul>
+        </div>
+        <div class="sidebar-card">
+          <button id="newDocumentButton" class="primary">New document</button>
+          <label class="upload-label" for="fileInput">Import .txt or .md as new doc</label>
+          <input id="fileInput" type="file" accept=".txt,.md" />
+          <p class="hint">New imports create editable documents. Existing drafts can import more content from inside the editor.</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <section id="dashboardView" class="view active">
+          <div class="top-row">
+            <button id="theme-toggle" type="button" class="secondary-button">Dark mode</button>
+            <div>
+              <p class="eyebrow">Dashboard</p>
+              <h2>Your documents</h2>
+            </div>
+            <button id="refreshButton" class="secondary">Refresh</button>
+          </div>
+
+          <div id="message" class="message hidden"></div>
+
+          <div class="grid-two">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Owned by me</h3>
+                <span id="ownedCount" class="count-pill">0</span>
+              </div>
+              <div id="ownedDocuments" class="document-list"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Shared with me</h3>
+                <span id="sharedCount" class="count-pill">0</span>
+              </div>
+              <div id="sharedDocuments" class="document-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="editorView" class="view">
+          <div class="top-row wrap-gap">
+            <div>
+              <button id="backButton" class="ghost">← Back</button>
+              <p class="eyebrow">Document editor</p>
+            </div>
+            <div class="editor-actions">
+              <span id="autosaveStatus" class="badge autosave-badge neutral">Autosave on</span>
+              <button id="saveButton" class="primary">Save now</button>
+            </div>
+          </div>
+
+          <div id="editorMessage" class="message hidden"></div>
+
+          <section class="panel editor-panel">
+            <div class="field-group">
+              <label for="documentTitle">Title</label>
+              <input id="documentTitle" type="text" placeholder="Untitled document" maxlength="120" />
+            </div>
+
+            <div class="metadata-bar">
+              <span id="ownerBadge" class="badge"></span>
+              <span id="accessBadge" class="badge secondary-badge"></span>
+              <span id="updatedBadge" class="badge secondary-badge"></span>
+            </div>
+
+            <div class="toolbar" id="toolbar">
+              <button data-command="bold"><strong>B</strong></button>
+              <button data-command="italic"><em>I</em></button>
+              <button data-command="underline"><u>U</u></button>
+              <button data-command="formatBlock" data-value="H1">H1</button>
+              <button data-command="formatBlock" data-value="H2">H2</button>
+              <button data-command="formatBlock" data-value="P">Paragraph</button>
+              <button data-command="insertUnorderedList">• List</button>
+              <button data-command="insertOrderedList">1. List</button>
+            </div>
+
+            <div id="editor" class="editor" contenteditable="true"></div>
+          </section>
+
+          <section class="panel utility-panel">
+            <div class="panel-header">
+              <h3>Bring files into this draft</h3>
+            </div>
+            <div class="stack-grid">
+              <div>
+                <label class="upload-label full-width" for="draftImportInput">Append .txt or .md into this document</label>
+                <input id="draftImportInput" type="file" accept=".txt,.md" />
+                <p class="hint dark-hint">Imported content is appended to the current draft with formatting preserved where possible.</p>
+              </div>
+              <div>
+                <label class="upload-label full-width" for="attachmentInput">Attach a reference file</label>
+                <input id="attachmentInput" type="file" accept=".txt,.md,.pdf,.png,.jpg,.jpeg" />
+                <p class="hint dark-hint">Attachments stay associated with the document and can be downloaded by users who have access.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h3>Attachments</h3>
+            </div>
+            <div id="attachmentList" class="attachment-list"></div>
+          </section>
+
+          <section class="panel" id="sharePanel">
+            <div class="panel-header">
+              <h3>Sharing</h3>
+            </div>
+            <div class="share-grid">
+              <div>
+                <label for="shareEmail">Share with seeded user email</label>
+                <input id="shareEmail" type="email" placeholder="maya@ajaia.local" />
+              </div>
+              <button id="shareButton" class="secondary">Grant access</button>
+            </div>
+            <div>
+              <p class="subtle-label">People with access</p>
+              <div id="shareList" class="share-list"></div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

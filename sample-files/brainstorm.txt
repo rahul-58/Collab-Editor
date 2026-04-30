@@ -1,0 +1,5 @@
+Ajaia editor brainstorm
+
+This is a plain text import example.
+
+Use the import button, then open the new document and format it further in the editor.
