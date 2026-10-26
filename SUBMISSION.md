@@ -4,14 +4,17 @@ This folder contains my submission for the Ajaia collaborative document editor a
 
 ## Included
 
-- source code
-- `README.md`
-- `architecture-note.md`
-- `ai-workflow-note.md`
-- `SUBMISSION.md`
-- `DEPLOYMENT.md`
-- sample files for import testing
-- automated tests
+- Full application source code
+- `README.md` - Project overview, features, and local setup
+- `architecture-note.md` - Architecture decisions and tradeoffs
+- `ai-workflow-note.md` - How AI tools supported development
+- `SUBMISSION.md` - Submission details and links
+- `DEPLOYMENT.md` - Deployment configuration and setup
+- `LOCAL-VERIFICATION.md` - Local test results and verification steps
+- `walkthrough-video-url.txt` - Walkthrough recording link
+- `sample-files/` - Sample files for import testing
+- `tests/` - Automated API tests
+- `Dockerfile` and `railway.json` - Deployment configuration
 
 ## Main features included
 
@@ -35,7 +38,7 @@ This folder contains my submission for the Ajaia collaborative document editor a
 
 ## Automated test coverage included
 
-At least one meaningful automated test is included. The suite covers the main sharing and file-handling paths.
+The suite covers the main sharing and file-handling paths.
 
 Run with:
 
@@ -45,16 +48,16 @@ npm test
 
 ## Live deployment
 
-Live URL: `ADD_LIVE_URL_HERE`
+Live URL: `https://collab-editor-production-9cf3.up.railway.app/`
 
 ## Walkthrough video
 
-Video URL: `ADD_VIDEO_URL_HERE`
+Video URL: `https://www.loom.com/share/53fbce2050c1475dbb2a71086664344a`
 
 ## What is complete
 
 The core document flow works end to end:
-create, edit, save, share, import, attach, and reopen.
+create, edit, save, share, import, attach and reopen.
 
 ## What is intentionally not included
 

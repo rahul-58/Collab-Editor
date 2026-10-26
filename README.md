@@ -2,7 +2,7 @@
 
 This is a lightweight collaborative document editor built for the Ajaia take-home assignment.
 
-I intentionally scoped it to one solid end-to-end workflow instead of trying to recreate all of Google Docs. The app lets a seeded user create documents, format content in the browser, share documents with another seeded user, attach supporting files, and reopen everything after refresh.
+I intentionally scoped it to one solid end-to-end workflow instead of trying to recreate all of Google Docs. The app lets a seeded user create documents, format content in the browser, share documents with another seeded user, attach supporting files and reopen everything after refresh.
 
 ## What it supports
 
@@ -42,13 +42,13 @@ Use these accounts to test the sharing flow:
 - Maya Patel — `maya@ajaia.local`
 - Sam Lee — `sam@ajaia.local`
 
-There is no full auth flow in this version. I used seeded users to keep the project focused on document behavior, sharing, and persistence.
+There is no full auth flow in this version. I used seeded users to keep the project focused on document behavior, sharing and persistence.
 
 ## Tech stack
 
 - Node.js
 - Express
-- Vanilla HTML, CSS, and JavaScript
+- Vanilla HTML, CSS and JavaScript
 - Local JSON/file-based persistence
 - Jest + Supertest for API tests
 
@@ -102,18 +102,30 @@ npm test
 
 ## Notes on persistence
 
-This app stores data locally on disk. Documents, shares, and attachments remain available after refresh and app restart.
+This app stores data locally on disk. Documents, shares and attachments remain available after refresh and app restart.
 
 For local development this works out of the box. For deployment, use a host with persistent storage.
 
 ## Deployment
 
-This project is set up for Railway-style deployment with persistent volume support.
+Collab Editor is deployed on Railway using Docker, with a persistent volume mounted at `/data` to store documents and attachments.
 
-Files included for that:
+The deployment is connected to the GitHub repository, so new commits to the configured branch can trigger a redeployment.
+
+Deployment files:
 - `Dockerfile`
 - `railway.json`
 - `DEPLOYMENT.md`
+
+## Live Deployment
+
+**Live Application:** https://collab-editor-production-9cf3.up.railway.app/
+
+**GitHub Repository:** https://github.com/rahul-58/Collab-Editor
+
+The application can be tested directly in the browser without creating an account. Select any seeded user listed above to try document editing, imports, attachments, and sharing.
+
+The live version uses Railway persistent storage to preserve documents and attachments across application restarts.
 
 ## Known limitations
 
@@ -127,7 +139,7 @@ This is intentionally scoped and does not include:
 
 ## Why the scope looks like this
 
-The goal here was to ship a working collaborative editor slice that feels coherent in a short timebox. I prioritized document creation, editing, import, sharing, persistence, and basic usability over more ambitious features that would have spread the work too thin.
+The goal was to ship a working collaborative editor slice that feels coherent in a limited time. I prioritized document creation, editing, import, sharing, persistence and basic usability over more features that would have taken more time to be perfected.
 
 ## Demo checklist
 

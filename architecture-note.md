@@ -2,7 +2,7 @@
 
 I treated this as a product slice, not a full document platform.
 
-The assignment leaves room for a lot of possible directions, so I made an early decision to focus on one reliable workflow: a user can create a document, edit it in the browser, share it with another user, import text content from a file, attach supporting files, and come back to it later without losing work.
+The assignment leaves room for a lot of possible directions, so I made an early decision to focus on one reliable workflow: a user can create a document, edit it in the browser, share it with another user, import text content from a file, attach supporting files and come back to it later without losing work.
 
 ## What I prioritized
 
@@ -17,18 +17,16 @@ That meant prioritizing:
 - file handling that fits the document workflow
 - enough validation and tests to make the app feel stable
 
-I spent less time on breadth and more time on making those pieces hang together.
-
 ## Frontend
 
-The frontend is a small single-page app built with plain HTML, CSS, and JavaScript. I kept it this way to reduce setup overhead and make the logic easy to follow in a take-home setting.
+The frontend is a small single-page app built with plain HTML, CSS and JavaScript. I kept it this way to reduce setup overhead and make the logic easy to follow in a take-home project.
 
 The UI has two main states:
 
 - dashboard
 - document editor
 
-The dashboard separates owned documents from shared documents, which makes the sharing model obvious right away.
+The dashboard separates owned documents from shared documents.
 
 The editor supports the formatting needed for the assignment:
 - bold
@@ -59,8 +57,6 @@ The access model is intentionally simple:
 - shared users can open and edit the document
 - only the owner can manage sharing
 
-That was enough to demonstrate document ownership and access control without getting stuck in full auth and role management.
-
 ## Persistence
 
 I used a file-based store for this version.
@@ -71,7 +67,11 @@ That choice was mostly about time and reliability. It let me keep the project ea
 - sharing relationships
 - attachments
 
-For a take-home project, this felt like the right tradeoff. It is simple, visible, and easy to reason about. The downside is that deployment needs persistent disk or a mounted volume, which is why the deployment notes target Railway rather than a purely serverless host.
+For this project, file-based persistence was a practical choice because it kept local setup simple and avoided introducing a separate database.
+
+I deployed the application on Railway with a persistent volume mounted at `/data`. This allows documents and attachments to remain available after application restarts and redeployments.
+
+The main tradeoff is scalability. A JSON-based store works for a small demo, but it is not ideal for concurrent writes or multiple application instances. For a larger application, I would use PostgreSQL for document data and object storage for attachments.
 
 ## File handling choices
 
@@ -83,15 +83,13 @@ I handled file upload in two ways:
 - import into a new document
 - import into an existing draft
 
-I also added document attachments because that is a realistic part of a shared writing workflow and fits the prompt well.
+I also added document attachments as it is something used by almost everyone at some point of time.
 
 ## What I left out
 
 I intentionally did not build:
 - real-time collaboration
-- live cursors
 - comments
-- suggestion mode
 - version history
 - export
 - full login/authentication
@@ -112,7 +110,8 @@ The next things I would add are:
 
 ## Summary
 
-The main tradeoff in this project was depth over breadth.
+The main tradeoff was choosing a smaller, reliable implementation instead of trying to build every feature of a collaborative editor.
 
-I chose a smaller surface area and tried to make the core behavior feel complete:
-create, edit, save, import, attach, share, reopen.
+I kept the frontend and backend simple, used file-based persistence, and relied on seeded users to demonstrate sharing without building a full authentication system.
+
+The biggest limitations are the browser-based editor implementation, lack of real-time collaboration, and file-based storage. These are reasonable tradeoffs for the assignment's scope, but they would be the first areas I would revisit if the application needed to support real users.
