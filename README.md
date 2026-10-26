@@ -100,11 +100,15 @@ npm test
 8. Import a `.md` or `.txt` file into a new document or existing draft
 9. Add an attachment and download it
 
-## Notes on persistence
+## Persistence
 
-This app stores data locally on disk. Documents, shares and attachments remain available after refresh and app restart.
+Collab Editor uses file-based storage to save documents, formatting, sharing information, and attachments.
 
-For local development this works out of the box. For deployment, use a host with persistent storage.
+When running locally, the application stores this data on disk.
+
+In production, the application runs on Railway with a persistent volume mounted at `/data`. This keeps documents, sharing information, and attachments available across application restarts and redeployments.
+
+The storage approach is intentionally lightweight for this project. For a larger application with more users and concurrent editing, I would consider PostgreSQL and object storage.
 
 ## Deployment
 
